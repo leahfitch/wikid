@@ -34,7 +34,7 @@ def convert(path, extensions=None):
 
     text = codecs.open(path, 'r', 'utf-8').read() + "\n\n[TOC]"
     
-    extension_list = ['extra', 'codehilite(force_linenos=False)', 'headerid', 'toc(title=Table of Contents)', 'wikilinks']
+    extension_list = ['extra', 'codehilite(force_linenos=True)', 'headerid', 'toc(title=Table of Contents)', 'wikilinks']
     if extensions:
         extension_list.extend(extensions)
 
