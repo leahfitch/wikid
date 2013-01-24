@@ -1,0 +1,323 @@
+/* Type */
+
+body
+{
+    font-family: "Helvetica Neue", Calibri, Helvetica, "Trebuchet MS", Verdana, sans-serif;
+    line-height: 1.5em;
+    padding: 4em 0 0 0;
+    color: #353333;
+}
+
+h1, h2, h3, h4, h5, h6
+{
+    margin: -4.5rem 0 1.5rem 0;
+    padding: 4.5rem 0 0 0;
+}
+
+p
+{
+    margin: 1.5rem 0;
+}
+
+h1
+{
+    font-size: 2em;
+    line-height: 2.5rem;
+}
+
+a
+{
+    color: #FF6600;
+    text-decoration: none;
+}
+
+a:hover
+{
+    color: #FFA319;
+}
+
+/* Main layout */
+
+#wikid-content
+{
+    max-width: 44em;
+    margin: 0 auto;
+    padding: 0 0 0 18em;
+    position: relative;
+}
+
+/* Table of contents */
+
+#wikid-toc
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 16em;
+}
+
+#wikid-toc .toctitle
+{
+    display: block;
+    font-weight: 600;
+    line-height: 3em;
+}
+
+#wikid-toc li
+{
+    line-height: 1em;
+}
+
+#wikid-toc a
+{
+    text-decoration: none;
+    color: #666;
+    font-size: 0.85em;
+}
+
+#wikid-toc a:hover
+{
+    color: #FF6600;
+}
+
+#wikid-toc > ul > li > a
+{
+    font-weight: 500;
+}
+
+#wikid-toc ul
+{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#wikid-toc ul ul
+{
+    margin-left: 1.5em;
+}
+
+#wikid-toc ul ul li
+{
+    margin: 0.25em 0;
+}
+
+/* Hilited code sections & pygments theme */
+
+.codehilitetable
+{
+    background-color: #f5f5f5;
+}
+
+.codehilitetable pre
+{
+    margin: 0;
+}
+
+.codehilitetable .linenos
+{
+    background-color: #ddd;
+    color: #666;
+}
+
+.codehilitetable .linenos,
+.codehilitetable .code
+{
+    padding: 0.5em;
+}
+
+.codehilitetable .hll { background-color: #ffffcc }
+.codehilitetable .c { color: #888888 } /* Comment */
+.codehilitetable .err { color: #FF0000; background-color: #FFAAAA } /* Error */
+.codehilitetable .k { color: #008800; font-weight: bold } /* Keyword */
+.codehilitetable .o { color: #333333 } /* Operator */
+.codehilitetable .cm { color: #888888 } /* Comment.Multiline */
+.codehilitetable .cp { color: #557799 } /* Comment.Preproc */
+.codehilitetable .c1 { color: #888888 } /* Comment.Single */
+.codehilitetable .cs { color: #cc0000; font-weight: bold } /* Comment.Special */
+.codehilitetable .gd { color: #A00000 } /* Generic.Deleted */
+.codehilitetable .ge { font-style: italic } /* Generic.Emph */
+.codehilitetable .gr { color: #FF0000 } /* Generic.Error */
+.codehilitetable .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.codehilitetable .gi { color: #00A000 } /* Generic.Inserted */
+.codehilitetable .go { color: #888888 } /* Generic.Output */
+.codehilitetable .gp { color: #c65d09; font-weight: bold } /* Generic.Prompt */
+.codehilitetable .gs { font-weight: bold } /* Generic.Strong */
+.codehilitetable .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.codehilitetable .gt { color: #0044DD } /* Generic.Traceback */
+.codehilitetable .kc { color: #008800; font-weight: bold } /* Keyword.Constant */
+.codehilitetable .kd { color: #008800; font-weight: bold } /* Keyword.Declaration */
+.codehilitetable .kn { color: #008800; font-weight: bold } /* Keyword.Namespace */
+.codehilitetable .kp { color: #003388; font-weight: bold } /* Keyword.Pseudo */
+.codehilitetable .kr { color: #008800; font-weight: bold } /* Keyword.Reserved */
+.codehilitetable .kt { color: #333399; font-weight: bold } /* Keyword.Type */
+.codehilitetable .m { color: #6600EE; font-weight: bold } /* Literal.Number */
+.codehilitetable .s { background-color: #fff0f0 } /* Literal.String */
+.codehilitetable .na { color: #0000CC } /* Name.Attribute */
+.codehilitetable .nb { color: #007020 } /* Name.Builtin */
+.codehilitetable .nc { color: #BB0066; font-weight: bold } /* Name.Class */
+.codehilitetable .no { color: #003366; font-weight: bold } /* Name.Constant */
+.codehilitetable .nd { color: #555555; font-weight: bold } /* Name.Decorator */
+.codehilitetable .ni { color: #880000; font-weight: bold } /* Name.Entity */
+.codehilitetable .ne { color: #FF0000; font-weight: bold } /* Name.Exception */
+.codehilitetable .nf { color: #0066BB; font-weight: bold } /* Name.Function */
+.codehilitetable .nl { color: #997700; font-weight: bold } /* Name.Label */
+.codehilitetable .nn { color: #0e84b5; font-weight: bold } /* Name.Namespace */
+.codehilitetable .nt { color: #007700 } /* Name.Tag */
+.codehilitetable .nv { color: #996633 } /* Name.Variable */
+.codehilitetable .ow { color: #000000; font-weight: bold } /* Operator.Word */
+.codehilitetable .w { color: #bbbbbb } /* Text.Whitespace */
+.codehilitetable .mf { color: #6600EE; font-weight: bold } /* Literal.Number.Float */
+.codehilitetable .mh { color: #005588; font-weight: bold } /* Literal.Number.Hex */
+.codehilitetable .mi { color: #0000DD; font-weight: bold } /* Literal.Number.Integer */
+.codehilitetable .mo { color: #4400EE; font-weight: bold } /* Literal.Number.Oct */
+.codehilitetable .sb { background-color: #fff0f0 } /* Literal.String.Backtick */
+.codehilitetable .sc { color: #0044DD } /* Literal.String.Char */
+.codehilitetable .sd { color: #DD4422 } /* Literal.String.Doc */
+.codehilitetable .s2 { background-color: #fff0f0 } /* Literal.String.Double */
+.codehilitetable .se { color: #666666; font-weight: bold; background-color: #fff0f0 } /* Literal.String.Escape */
+.codehilitetable .sh { background-color: #fff0f0 } /* Literal.String.Heredoc */
+.codehilitetable .si { background-color: #eeeeee } /* Literal.String.Interpol */
+.codehilitetable .sx { color: #DD2200; background-color: #fff0f0 } /* Literal.String.Other */
+.codehilitetable .sr { color: #000000; background-color: #fff0ff } /* Literal.String.Regex */
+.codehilitetable .s1 { background-color: #fff0f0 } /* Literal.String.Single */
+.codehilitetable .ss { color: #AA6600 } /* Literal.String.Symbol */
+.codehilitetable .bp { color: #007020 } /* Name.Builtin.Pseudo */
+.codehilitetable .vc { color: #336699 } /* Name.Variable.Class */
+.codehilitetable .vg { color: #dd7700; font-weight: bold } /* Name.Variable.Global */
+.codehilitetable .vi { color: #3333BB } /* Name.Variable.Instance */
+.codehilitetable .il { color: #0000DD; font-weight: bold } /* Literal.Number.Integer.Long */
+
+
+/* Search */
+#wikid-search
+{
+    display: block;
+    position: relative;
+    line-height: 2.5em;
+}
+
+#wikid-search input
+{
+    display: inline-block;
+    vertical-align: middle;
+    width: 15rem;
+    padding: 0.25em;
+}
+
+#wikid-search .cancel
+{
+    display: none;
+    position: absolute;
+    font-size: 0.75em;
+    font-weight: bold;
+    top: .25em;
+    right: .5em;
+    color: darkgray;
+
+}
+
+#wikid-search .results
+{
+    display: none;
+    position: absolute;
+    width: 15.5em;
+    padding: 0;
+    background-color: #fff;
+    border: 1px solid rgba(0,0,0,0.2);
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    box-shadow: 0 0 6px rgba(0,0,0,0.2);
+}
+
+#wikid-search .results ul
+{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#wikid-search .results ul li a
+{
+    display: block;
+    padding: 0.25rem 0.5em;
+    font-size: 0.8em;
+    border-bottom: 1px solid #ddd;
+    line-height: 1.5em;
+}
+
+#wikid-search .results ul li:last-child a
+{
+    border: none;
+}
+
+#wikid-search .results ul li a span.title,
+#wikid-search .results ul li a span.context
+{
+    display: block;
+    height: 1.5em;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+#wikid-search .results ul li a span.title
+{
+    font-size: 1.2em;
+    color: #333;
+}
+
+#wikid-search .results ul li a span.context
+{
+    color: #666;
+}
+
+#wikid-search .results ul li a span.match
+{
+    font-weight: 600;
+    color: #1286D9;
+}
+
+#wikid-search .results ul li.selected
+{
+    background-color: #efefef;
+}
+
+/* Fixed position for search and toc */
+
+#wikid-aside
+{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+#wikid-aside .inner
+{
+    max-width: 62em;
+    margin: 0 auto;
+    position: relative;
+    background-color: #efefef;
+    height: 3em;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+
+#wikid-aside #wikid-toc
+{
+    position: absolute;
+    left: 1em;
+}
+
+#wikid-aside #wikid-toc > ul
+{
+    margin-top: 1em;
+}
+
+#wikid-aside #wikid-search
+{
+    position: absolute;
+    top: 0;
+    right: 1em;
+}
