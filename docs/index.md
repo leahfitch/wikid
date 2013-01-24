@@ -50,7 +50,7 @@ You can also install it from source.
     :::bash
     git clone git://github.com/elishacook/wikid.git
     cd wikid
-    python setup.py
+    python setup.py install
 
 Either way, you will get a script installed called `wikid`. Here's the help for it.
 
