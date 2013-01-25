@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name = 'wikid',
-    version = '0.0.4',
+    version = '0.0.5',
     packages = ['wikid'],
     package_data = { 'wikid': ['data/js/*', 'data/css/*'] },
     scripts = ['scripts/wikid'],
