@@ -74,11 +74,43 @@
 			return values
 		}
 
+		var get_full_records_from_matches = function (matches)
+		{
+			var records = []
+
+			$.each(matches, function (i, match)
+			{
+				var record = {
+					relevance: match[0],
+					path: wikid_search_index.paths[match[1]],
+					title: wikid_search_index.titles[match[2]],
+					context: match[3] || ''
+				}
+				
+				if (record.context)
+				{
+					if (record.context[0] == '.')
+					{
+						record.context = '..' + record.context
+					}
+
+					if (record.context[record.context.length-1] == '.')
+					{
+						record.context = record.context + '..'
+					}					
+				}
+
+				records.push(record)
+			})
+
+			return records
+		}
+
 		var sort_matches = function (matches)
 		{
 			matches.sort(function (a, b)
 			{
-				return b.r - a.r
+				return b.relevance - a.relevance
 			})
 		}
 
@@ -89,12 +121,12 @@
 
 			for (var i=0; i<matches.length; i++)
 			{
-				if (paths_seen[matches[i].p])
+				if (paths_seen[matches[i].path])
 				{
 					continue
 				}
 
-				paths_seen[matches[i].p] = 1
+				paths_seen[matches[i].path] = 1
 				new_matches.push(matches[i])
 			}
 
@@ -110,7 +142,7 @@
 			{
 				// If the match is with a term in the title then the context
 				// is the title
-				var n = matches[i].c ? 'c' : 't',
+				var n = matches[i].context ? 'context' : 'title',
 					c = matches[i][n]
 
 				matches[i][n] = c.replace(pattern, '<span class="match">$1</span>')
@@ -121,27 +153,22 @@
 		{
 			for (var i=0; i<matches.length; i++)
 			{
-				matches[i].p = base_path + matches[i].p
+				matches[i].path = base_path + matches[i].path
 			}
 		}
 
 		var find = function (text)
 		{
 			var text = text.replace(/\s+\:\;\(\)\{\}\[\]\,\?\!\./gi, '').toLowerCase(),
-				matches = get_prefix_matches(wikid_search_trie, text)
+				matches = get_full_records_from_matches(
+							get_prefix_matches(wikid_search_index.trie, text))
 
 			sort_matches(matches)
 			matches = get_filtered_matches(matches)
+			hilite_context(text, matches)
+			adjust_paths(matches)
 
-			var matches_copy = []
-			$.each(matches, function (i, match)
-			{
-				matches_copy.push( $.extend({}, match) )
-			})
-
-			hilite_context(text, matches_copy)
-			adjust_paths(matches_copy)
-			return matches_copy
+			return matches
 		}
 
 		var last_search_text = '',
@@ -203,16 +230,16 @@
 				$.each(matches, function (i, match)
 				{
 					var $li = $('<li></li>'),
-						$a = $('<a href="'+match.p+'"></a>')
+						$a = $('<a href="'+match.path+'"></a>')
 
-					if (match.t)
+					if (match.title)
 					{
-						$a.append($('<span class="title">'+(match.t ? match.t : match.t)+'</span>'))
+						$a.append($('<span class="title">'+(match.title ? match.title : match.title)+'</span>'))
 					}
 
-					if (match.c)
+					if (match.context)
 					{
-						$a.append($('<span class="'+(match.t ? 'context' : 'title')+'">'+match.c+'</span>'))
+						$a.append($('<span class="'+(match.title ? 'context' : 'title')+'">'+match.context+'</span>'))
 					}
 
 					$li.append($a)
