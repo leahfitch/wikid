@@ -20,6 +20,8 @@ class WikidApp(object):
         self.handlers = {
             'js/search-index.js': self.handle_search_index_request
         }
+        self.last_modified = 0
+        self.search_index = None
         
         
     def __call__(self, environ, start_response):
@@ -75,10 +77,14 @@ class WikidApp(object):
 
 
     def handle_search_index_request(self):
-        return self.get_search_index(), 'text/javascript'
+        self.update_search_index()
+        return self.search_index, 'text/javascript'
 
 
-    def get_search_index(self):
+    def update_search_index(self):
+        if not self.was_modified():
+            return
+        print "Updating index ...",
         docs = {}
         for root, dirs, files in os.walk(self.path):
             for f in files:
@@ -96,4 +102,16 @@ class WikidApp(object):
                         else:
                             doc_path = path
                         docs[doc_path] = text
-        return make_index(docs)
+        self.search_index = make_index(docs)
+        print 'done.'
+
+
+    def was_modified(self):
+        modified = 0
+        for root, dirs, files in os.walk(self.path):
+            for f in files:
+                stat = os.stat(os.path.join(root, f))
+                modified = max(self.last_modified, stat.st_mtime)
+        was_modified = self.last_modified < modified
+        self.last_modified = modified
+        return was_modified
