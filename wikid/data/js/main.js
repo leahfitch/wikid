@@ -1,26 +1,35 @@
 ;(function ()
 {
-	var $toc = $('#wikid-content > .toc').attr('id', 'wikid-toc'),
-		$search = $('#wikid-search').prependTo($('#wikid-content>.toc')),
+	var $search = $('#wikid-search'),
 		$input = $search.find('input'),
 		$results = $search.find('.results'),
 		$cancel = $search.find('.cancel'),
-		base_path = $('script:first').attr('src').split('/').slice(0,-2).join('/')
-
-	if (base_path)
-	{
-		base_path = base_path + '/'
-	}
-
-	$('<div id="wikid-aside"><div class="inner"></div></div>')
-		.appendTo('body')
-		.find('.inner')
-			.append($toc)
-		.end()
-		.find('#wikid-search')
-			.insertAfter($toc)
-
-	$(function ()
+		base_path = (function ()
+		{
+			var rel_parts = $('script:first').attr('src').split('/').slice(0,-2),
+				path_parts = window.location.pathname.split('/').slice(0,-1)
+			
+			$.each(rel_parts, function ()
+			{
+				if (this == '.')
+				{
+					return
+				}
+				
+				if (this == '..')
+				{
+					path_parts.pop()
+				}
+				else
+				{
+					path_parts.push(this)
+				}
+			})
+			
+			return path_parts.join('/') + '/'
+		})()
+	
+	;(function ()
 	{
 		var get_values = function (node)
 		{
@@ -205,6 +214,7 @@
 		var hide_search_results = function ()
 		{
 			last_search_text = ''
+			$input.val('')
 			$results.hide()
 			$(document).unbind('click', hide_search_results)
 			$cancel.hide()
@@ -267,9 +277,13 @@
 		{
 			e.preventDefault()
 			hide_search_results()
-			$input.val('')
 		})
-
+		
+		$results.click(function (e)
+		{
+			hide_search_results()
+		})
+		
 		$input
 			.keyup(function (e)
 			{
@@ -298,5 +312,109 @@
 		{
 			e.stopPropagation()
 		})
-	})
+	})()
+	
+	var clean_path = function (path)
+	{
+		path = path.toLowerCase()
+		if (path[path.length - 1] == '/')
+		{
+			path = path.substr(0, path.length - 1)
+		}
+		
+		return path
+	}
+	
+	var is_on_current_page = function (path)
+	{
+		var parts = path.split('#')
+		return clean_path(parts[0]) == clean_path(window.location.pathname)
+	}
+	
+	;(function ()
+	{
+		var $toc = $('#wikid-toc')
+			$curlist = $('<ul></ul>'),
+			$curitem = null,
+			depth = 1
+		
+		$toc.append($curlist)
+		
+		$.each(wikid_toc, function ()
+		{
+			if (this.depth > depth)
+			{
+				for (var i=0; i<this.depth-depth; i++)
+				{
+					$curlist = $('<ul></ul>')
+					$curitem.append($curlist)
+				}
+			}
+			else if (this.depth < depth)
+			{
+				for (var i=0; i<depth-this.depth; i++)
+				{
+					$curlist = $curlist.parent().parent()
+				}
+			}
+			
+			var path = base_path + this.path
+			$curitem = $('<li></li>')
+			$curitem.append(
+				$('<a>'+this.text+'</a>').attr('href', path)
+			)
+			$curlist.append($curitem)
+			
+			depth = this.depth
+			
+			if (is_on_current_page(path))
+			{
+				$curitem.addClass('current')
+			}
+		})
+		
+		$toc.find('>ul>li').each(function ()
+		{
+			var $item = $(this),
+				$disclosure = $('<a href="#" class="disclosure"></a>')
+			$item.prepend($disclosure)
+			
+			if ($item.find('ul').length == 0)
+			{
+				$disclosure
+					.addClass('hidden')
+					.click(function (e)
+					{
+						e.preventDefault()
+					})
+				return
+			}
+			
+			if ($item.is('.current'))
+			{
+				$item.addClass('open')
+				$disclosure.html('-')
+			}
+			else
+			{
+				$disclosure.html('+')
+			}
+			
+			$disclosure.click(function (e)
+			{
+				e.preventDefault()
+				
+				if ($item.is('.open'))
+				{
+					$item.removeClass('open')
+					$disclosure.html('+')
+				}
+				else
+				{
+					$item.addClass('open')
+					$disclosure.html('-')
+				}
+			})
+		})
+	})()
 })()

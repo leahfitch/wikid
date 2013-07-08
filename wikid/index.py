@@ -10,23 +10,21 @@ class TextCollectingTreeprocessor(Treeprocessor):
     
     def __init__(self, *args, **kwargs):
         Treeprocessor.__init__(self, *args, **kwargs)
-        self.last_header_id = ""
-        self.text = {
-            "": {
-                "text": []
-            }
-        }
+        self.last_item = None
+        self.items = []
     
     def run(self, root):
         for elm in root.iter():
             if elm.tag in ['h1','h2','h3','h4','h5','h6']:
-                self.last_header_id = elm.attrib['id']
-                self.text[self.last_header_id] = {
+                self.last_item = {
+                    'id': elm.attrib['id'],
                     'title': elm.text,
-                    'text': []
+                    'text': [],
+                    'depth': int(elm.tag[1])
                 }
-            elif elm.text and not elm.text[0] == STX:
-                self.text[self.last_header_id]['text'].append(elm.text)
+                self.items.append(self.last_item)
+            elif self.last_item and elm.text and not elm.text[0] == STX:
+                self.last_item['text'].append(elm.text)
 
 
 class TextCollectingExtension(Extension):
@@ -88,8 +86,8 @@ def get_annotated_docs(raw_docs):
     term_totals = {}
     docs = []
 
-    for path, text in raw_docs.items():
-        doc = {'path': path}
+    for text in raw_docs:
+        doc = {'path': text['path']}
         raw_terms = ' '.join(text['text'])
         if 'title' in text:
             doc['title'] = text['title']
@@ -216,4 +214,4 @@ def make_index(raw_docs):
     paths = reverse_and_sort(paths.items())
     titles = reverse_and_sort(titles.items())
     encode = lambda x: json.dumps(x, separators=(',',':')).encode('utf-8')
-    return 'wikid_search_index={titles:' + encode(titles) + ',paths:' + encode(paths) + ',trie:' + encode(trie) + '};'
+    return 'var wikid_search_index={titles:' + encode(titles) + ',paths:' + encode(paths) + ',trie:' + encode(trie) + '};'

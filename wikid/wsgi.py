@@ -1,8 +1,8 @@
 import os
 import os.path
 import mimetypes
+from wikid import build
 from wikid.convert import convert
-from wikid.index import TextCollectingExtension, make_index
 
 
 class WikidNotFoundError(Exception):
@@ -11,17 +11,20 @@ class WikidNotFoundError(Exception):
 
 class WikidApp(object):
     
-    def __init__(self, path):
+    def __init__(self, path, port):
         self.path = path
+        self.port = port
         self.paths = [
             path,
             os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
         ]
         self.handlers = {
-            'js/search-index.js': self.handle_search_index_request
+            'js/search-index.js': self.handle_search_index_request,
+            'js/toc.js': self.handle_toc_request
         }
         self.last_modified = 0
         self.search_index = None
+        self.toc = None
         
         
     def __call__(self, environ, start_response):
@@ -60,7 +63,10 @@ class WikidApp(object):
                     raise WikidNotFoundError()
         
         if os.path.splitext(full_path)[1] == '.md':
-            result = convert(full_path)
+            result = convert(full_path, 
+                            extension_configs={'wikilinks':[
+                                ('base_url', 'http://localhost:%d/' % self.port)
+                            ]})
             content_type = 'text/html; charset=utf-8'
         else:
             content_type, _ = mimetypes.guess_type(full_path)
@@ -77,32 +83,38 @@ class WikidApp(object):
 
 
     def handle_search_index_request(self):
-        self.update_search_index()
+        self.update_index()
         return self.search_index, 'text/javascript'
+        
+        
+    def handle_toc_request(self):
+        self.update_index()
+        return self.toc, 'text/javascript'
 
 
-    def update_search_index(self):
+    def update_index(self):
         if not self.was_modified():
             return
+        
         print "Updating index ...",
-        docs = {}
-        for root, dirs, files in os.walk(self.path):
-            for f in files:
-                fname, ext = os.path.splitext(f)
-                if ext == '.md':
-                    if fname == 'index':
-                        path = '/'
-                    else:
-                        path = '/' + os.path.relpath(os.path.join(root, fname), self.path)
-                    md_text_ext = TextCollectingExtension()
-                    convert(os.path.join(root, f), [md_text_ext])
-                    for header_id, text in md_text_ext.treeprocessor.text.items():
-                        if header_id:
-                            doc_path = path + '#' + header_id
-                        else:
-                            doc_path = path
-                        docs[doc_path] = text
-        self.search_index = make_index(docs)
+        
+        def link_gen(base, name, id=None):
+            if base.startswith('./'):
+                base = base[2:]
+            elif base == '.':
+                base = ''
+            path = '/'
+            if name != 'index':
+                path += os.path.join(base, name)
+            if id:
+                path += '#'+id
+            return path
+                
+        
+        items = build.walk_wiki_files(self.path, link_gen=link_gen)
+        self.search_index = build.index_from_items(items)
+        self.toc = build.toc_from_items(items)
+        
         print 'done.'
 
 

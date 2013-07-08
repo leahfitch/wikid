@@ -1,17 +1,17 @@
 /* Type */
 
+@import url(http://fonts.googleapis.com/css?family=PT+Sans:400,700,400italic,700italic);
+
 body
 {
-    font-family: "Helvetica Neue", Calibri, Helvetica, "Trebuchet MS", Verdana, sans-serif;
+    font-family: "PT Sans", sans-serif;
     line-height: 1.5em;
-    padding: 4em 0 0 0;
-    color: #353333;
+    color: #222;
 }
 
 h1, h2, h3, h4, h5, h6
 {
-    margin: -4.5rem 0 1.5rem 0;
-    padding: 4.5rem 0 0 0;
+    margin: 1.5rem 0;
 }
 
 p
@@ -38,18 +38,37 @@ a:hover
 
 blockquote
 {
-    font-family: Candara, "Times New Roman", serif;
-    color: #666;
-    font-size: 1.2em;
+    color: #555;
+    font-style: italic;
 }
 
 /* Main layout */
 
 #wikid-content
 {
-    max-width: 44em;
+    max-width: 62rem;
     margin: 0 auto;
-    padding: 0 0 0 18em;
+    padding: 0;
+    position: relative;
+}
+
+#wikid-body
+{
+    margin-left: 18rem;
+}
+
+#wikid-sidebar
+{
+    top: 0;
+    left: 0;
+    position: absolute;
+    width: 16rem;
+}
+
+#wikid-sidebar .inner
+{
+    max-width: 62em;
+    margin: 0 auto;
     position: relative;
 }
 
@@ -57,17 +76,7 @@ blockquote
 
 #wikid-toc
 {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 16em;
-}
-
-#wikid-toc .toctitle
-{
-    display: block;
-    font-weight: 600;
-    line-height: 3em;
+    margin-top: 1rem;
 }
 
 #wikid-toc li
@@ -79,7 +88,6 @@ blockquote
 {
     text-decoration: none;
     color: #666;
-    font-size: 0.85em;
 }
 
 #wikid-toc a:hover
@@ -101,12 +109,146 @@ blockquote
 
 #wikid-toc ul ul
 {
-    margin-left: 1.5em;
+    margin-left: 2em;
 }
 
 #wikid-toc ul ul li
 {
-    margin: 0.25em 0;
+    margin: 0.5rem 0;
+}
+
+#wikid-toc > ul > li
+{
+    margin: 0.5rem 0;
+}
+
+#wikid-toc > ul > li > a
+{
+    font-weight: bold;
+}
+
+#wikid-toc > ul > li .disclosure
+{
+    display: inline-block;
+    border: 1px solid #efefef;
+    font-size: 0.8rem;
+    line-height: 0.7rem;
+    width: 0.8rem;
+    height: 0.8rem;
+    text-align: center;
+    vertical-align: baseline;
+    margin-right: 0.5rem;
+    font-family: sans-serif;
+}
+
+#wikid-toc > ul > li .disclosure.hidden
+{
+    border-color: rgba(0,0,0,0);
+}
+
+#wikid-toc > ul > li > ul
+{
+    display: none;
+}
+
+#wikid-toc > ul > li.open > ul
+{
+    display: block;
+}
+
+/* Search */
+
+#wikid-search
+{
+    display: block;
+    position: relative;
+    line-height: 2.5em;
+}
+
+#wikid-search input
+{
+    display: inline-block;
+    vertical-align: middle;
+    width: 15rem;
+    padding: 0.25em;
+}
+
+#wikid-search .cancel
+{
+    display: none;
+    position: absolute;
+    font-size: 0.75em;
+    font-weight: bold;
+    top: .25em;
+    right: .5em;
+    color: darkgray;
+
+}
+
+#wikid-search .results
+{
+    display: none;
+    position: absolute;
+    width: 15.5em;
+    padding: 0;
+    background-color: #fff;
+    border: 1px solid rgba(0,0,0,0.2);
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    box-shadow: 0 0 6px rgba(0,0,0,0.2);
+}
+
+#wikid-search .results ul
+{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#wikid-search .results ul li a
+{
+    display: block;
+    padding: 0.25rem 0.5em;
+    font-size: 0.8em;
+    border-bottom: 1px solid #ddd;
+    line-height: 1.5em;
+}
+
+#wikid-search .results ul li:last-child a
+{
+    border: none;
+}
+
+#wikid-search .results ul li a span.title,
+#wikid-search .results ul li a span.context
+{
+    display: block;
+    height: 1.5em;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+#wikid-search .results ul li a span.title
+{
+    font-size: 1.2em;
+    color: #333;
+}
+
+#wikid-search .results ul li a span.context
+{
+    color: #666;
+}
+
+#wikid-search .results ul li a span.match
+{
+    font-weight: 600;
+    color: #1286D9;
+}
+
+#wikid-search .results ul li.selected
+{
+    background-color: #efefef;
 }
 
 /* Hilited code sections & pygments theme */
@@ -214,137 +356,3 @@ blockquote
 .codehilite .vg { color: #dd7700; font-weight: bold } /* Name.Variable.Global */
 .codehilite .vi { color: #3333BB } /* Name.Variable.Instance */
 .codehilite .il { color: #0000DD; font-weight: bold } /* Literal.Number.Integer.Long */
-
-
-/* Search */
-#wikid-search
-{
-    display: block;
-    position: relative;
-    line-height: 2.5em;
-}
-
-#wikid-search input
-{
-    display: inline-block;
-    vertical-align: middle;
-    width: 15rem;
-    padding: 0.25em;
-}
-
-#wikid-search .cancel
-{
-    display: none;
-    position: absolute;
-    font-size: 0.75em;
-    font-weight: bold;
-    top: .25em;
-    right: .5em;
-    color: darkgray;
-
-}
-
-#wikid-search .results
-{
-    display: none;
-    position: absolute;
-    width: 15.5em;
-    padding: 0;
-    background-color: #fff;
-    border: 1px solid rgba(0,0,0,0.2);
-    border-bottom-left-radius: 6px;
-    border-bottom-right-radius: 6px;
-    box-shadow: 0 0 6px rgba(0,0,0,0.2);
-}
-
-#wikid-search .results ul
-{
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-#wikid-search .results ul li a
-{
-    display: block;
-    padding: 0.25rem 0.5em;
-    font-size: 0.8em;
-    border-bottom: 1px solid #ddd;
-    line-height: 1.5em;
-}
-
-#wikid-search .results ul li:last-child a
-{
-    border: none;
-}
-
-#wikid-search .results ul li a span.title,
-#wikid-search .results ul li a span.context
-{
-    display: block;
-    height: 1.5em;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-}
-
-#wikid-search .results ul li a span.title
-{
-    font-size: 1.2em;
-    color: #333;
-}
-
-#wikid-search .results ul li a span.context
-{
-    color: #666;
-}
-
-#wikid-search .results ul li a span.match
-{
-    font-weight: 600;
-    color: #1286D9;
-}
-
-#wikid-search .results ul li.selected
-{
-    background-color: #efefef;
-}
-
-/* Fixed position for search and toc */
-
-#wikid-aside
-{
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-}
-
-#wikid-aside .inner
-{
-    max-width: 62em;
-    margin: 0 auto;
-    position: relative;
-    background-color: #efefef;
-    height: 3em;
-    border-bottom-left-radius: 6px;
-    border-bottom-right-radius: 6px;
-}
-
-#wikid-aside #wikid-toc
-{
-    position: absolute;
-    left: 1em;
-}
-
-#wikid-aside #wikid-toc > ul
-{
-    margin-top: 1em;
-}
-
-#wikid-aside #wikid-search
-{
-    position: absolute;
-    top: 0;
-    right: 1em;
-}

@@ -3,80 +3,142 @@ import os.path
 import shutil
 import re
 import codecs
+import json
 from wikid.convert import convert
 from wikid.index import TextCollectingExtension, make_index
 
 link_re = re.compile('(href|src)="([^#^"][^"]*)"')
+    
+    
+def walk_wiki_files(path,
+    dir_visitor=None,
+    non_wiki_visitor=None,
+    wiki_visitor=None,
+    link_gen=None):
+    """Walks a directory looking for wiki files. The first argument is the path to walk,
+    the rest are visitors for different things the walk encounters. 
+    
+    dir_visitor(path)
+    `path` -- a path relative to the wiki path
+    
+    non_wiki_visitor(path)
+    `path` -- a path to a file without a .md extension, relative to the wiki path
+    
+    wiki_visitor(base, name, html, items)
+    `base` -- the base path, relative to the wiki path
+    `name` -- the name of the markdown file, minus its extension
+    `html` -- the html generated from the markdown
+    
+    Additionally, the caller may wish to pass a `link_gen`. This generates an internal link
+    between wiki files. It should look like this:
+    
+    link_gen(base, name)
+    `base` -- the base path relative to the wiki path
+    `name` -- the name of the wiki file sans extension
+    `id` -- the id of an anchor on the wiki page (may be None)
+    
+    Returns a list of items collected by `TextCollectingExtension`
+    
+    """
+    items = []
+    for base, dirs, files in os.walk(path):
+        if '.page-order' in files:
+            order = {}
+            for i, p in enumerate(open(os.path.join(base, '.page-order')).read().split()):
+                order[p.lower() + '.md'] = i
+            files.sort(cmp=lambda a,b: cmp(order.get(a.lower(), 10000), order.get(b.lower(), 10000)))
+        if dir_visitor:
+            for d in dirs:
+                dir_visitor(
+                    os.path.relpath(os.path.join(base, d), start=path)
+                )
+        for f in files:
+            name, ext = os.path.splitext(f)
+            if ext == '.md':
+                md_text_ext = TextCollectingExtension()
+                relbase = os.path.relpath(base, start=path)
+                if link_gen:
+                    base_url = link_gen(relbase, '', None)
+                else:
+                    base_url = os.path.relpath(path, start=base)
+                html = convert(os.path.join(base, f), 
+                                extensions=[md_text_ext], 
+                                extension_configs={'wikilinks': [
+                                    ('base_url', base_url+'/'),
+                                    ('end_url', '.html')
+                                ]})
+                for item in md_text_ext.treeprocessor.items:
+                    if link_gen:
+                        item['path'] = link_gen(relbase, name, item.get('id'))
+                    else:
+                        item_file_path = os.path.relpath(os.path.join(base, name+'.html'), start=path)
+                        item['path'] = item_file_path + ('#'+item['id'] if 'id' in item else '')
+                    items.append(item)
+                if wiki_visitor:
+                    wiki_visitor(relbase, name, html)
+            elif non_wiki_visitor:
+                non_wiki_visitor(os.path.join(relbase, f))
+    return items
+    
+    
+def index_from_items(items):
+    return make_index(items)
+    
+    
+def toc_from_items(items):
+    headers = []
+    for item in items:
+        if item.get('id'):
+            headers.append({
+                'path': item['path'],
+                'text': item['title'],
+                'depth': item['depth']
+            })
+    return 'var wikid_toc = ' + json.dumps(headers)
+    
 
-def adjust_paths(wiki_dir, file_dir, html):
-    """Since compiled files can be served from anywhere
-    links in the html need to be changed so they are relative."""
+class Builder(object):
     
-    link_matches = link_re.findall(html)
-    
-    for attr,src_path in link_matches:
-        dst_path = src_path
-        if '.' not in dst_path:
-            if dst_path[-1] == '/':
-                dst_path = dst_path[:-1]
-            dst_path += '.html'
-        if dst_path[0] == '/':
-            dst_path = dst_path[1:]
+    def __init__(self, indir, outdir):
+        self.indir = indir
+        self.outdir = outdir
         
-        full_path = os.path.join(wiki_dir, dst_path)
-        rel_path = os.path.relpath(full_path, start=file_dir)
+    def build(self):
+        if os.path.exists(self.outdir):
+            shutil.rmtree(self.outdir)
+        os.makedirs(self.outdir)
         
-        html = html.replace(
-            '%s="%s"' % (attr, src_path),
-            '%s="%s"' % (attr, rel_path))
+        data_dir = os.path.join(os.path.dirname(__file__), 'data')
+        for f in os.listdir(data_dir):
+            src = os.path.join(data_dir, f)
+            dst = os.path.join(self.outdir, f)
+            if os.path.isdir(src):
+                shutil.copytree(src, dst)
+            else:
+                shutil.copy(src, dst)
+        
+        items = walk_wiki_files(
+            self.indir,
+            self.dir_visitor,
+            self.non_wiki_visitor,
+            self.wiki_visitor
+        )
+        open(os.path.join(self.outdir, 'js', 'toc.js'), 'w').write(toc_from_items(items))
+        open(os.path.join(self.outdir, 'js', 'search-index.js'), 'w').write(index_from_items(items))
     
-    return html
-
+    def dir_visitor(self, path):
+        os.mkdir(os.path.join(self.outdir, path))
+        
+    def non_wiki_visitor(self, path):
+        shutil.copy(os.path.join(self.indir, path), 
+                    os.path.join(self.outdir, path))
+        
+    def wiki_visitor(self, base, name, html):
+        #html = adjust_paths(self.indir, os.path.join(self.indir, base), html)
+        open(os.path.join(self.outdir, base, name+'.html'), 'w').write(html)
+        
 
 def build_wiki(indir, outdir):
-    """Process the markdown at `indir` and put it in `outdir`"""
+    builder = Builder(indir, outdir)
+    builder.build()
     
-    docs = {}
-    
-    if os.path.exists(outdir):
-        shutil.rmtree(outdir)
-        
-    os.makedirs(outdir)
-    
-    data_dir = os.path.join(os.path.dirname(__file__), 'data')
-    for f in os.listdir(data_dir):
-        src = os.path.join(data_dir, f)
-        dst = os.path.join(outdir, f)
-        if os.path.isdir(src):
-            shutil.copytree(src, dst)
-        else:
-            shutil.copy(src, dst)
-    
-    for inbasedir, dirs, files in os.walk(indir):
-        outbasedir = os.path.join(outdir, os.path.relpath(inbasedir, indir))
-        for d in dirs:
-            os.mkdir(os.path.join(outbasedir, d))
-        for f in files:
-            fname, ext = os.path.splitext(f)
-            if ext == '.md':
-                inpath = os.path.join(inbasedir, f)
-                outpath = os.path.join(outbasedir, fname+'.html')
-                md_text_ext = TextCollectingExtension()
-                html = adjust_paths(indir, inbasedir, convert(inpath, [md_text_ext]) )
-                html_file = codecs.open(outpath, 'w', 'utf-8')
-                html_file.write(html.encode('utf-8'))
-                html_file.close()
-                path = os.path.relpath(outpath, start=outdir)
-                for header_id, text in md_text_ext.treeprocessor.text.items():
-                    if header_id:
-                        doc_path = path + '#' + header_id
-                    else:
-                        doc_path = path
-                    docs[doc_path] = text
-            else:
-                shutil.copy(os.path.join(inbasedir, f), os.path.join(outbasedir, f))
-
-    index_js = make_index(docs)
-    index_file = open(os.path.join(outdir, 'js', 'search-index.js'), 'w')
-    index_file.write(index_js)
-    index_file.close()
