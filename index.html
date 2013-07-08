@@ -1,23 +1,34 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Wikid: The stupid-simple wiki</title>
-        <link rel="stylesheet" type="text/css" href="css/styles.css">
+        <title>Wikid</title>
+        <link rel="stylesheet" type="text/css" href="./css/styles.css">
     </head>
     <body>
         <div id="wikid-content">
-        <h1 id="wikid-the-stupid-simple-wiki">Wikid: The stupid-simple wiki</h1>
-<p>Hi there. This document is about <em>wikid</em> (pronounce how you like), a really simple <a href="http:/en.wikipedia.org/wiki/Wiki">wiki</a>. This wiki is so simple, in fact, that I hesitate even to call it a wiki. You see, it doesn't use a database, or have authorization or even users. There's no history, no email notifications, no media uploading, no discussions, no metadata and no UI for managing pages.</p>
-<p>So, you may ask, why the hell should anyone use it? That's a very good question that I will answer now. Even though <em>wikid</em> doesn't have any of those fine things listed in the last paragraph, there are some other tools that do and they work nicely with <em>wikid</em>. Those tools are a modern operating system, a text editor and a modern revision control system, like <a href="http:/git-scm.com">git</a>. A modern operating system provides loads of support for authoring different kinds of media files, a text editor let's you write <a href="http:/daringfireball.net/projects/markdown">Markdown</a>, the language of <em>wikid</em> and an rcs provides revision history and attribution of changes.</p>
+            <aside id="wikid-sidebar">
+                <div id="wikid-toc"></div>
+                <div id="wikid-search">
+                    <input type="text" placeholder="Search...">
+                    <div class="results"></div>
+                    <a href="#" class="cancel">X</a>
+                </div>
+            </aside>
+            <div id="wikid-body">
+            <h1 id="wikid">Wikid</h1>
+<p><em>The stupid-simple wiki</em></p>
+<p>To get started right away, see <a class="wikilink" href="./Usage.html">Usage</a>.</p>
+<p>Hi there. This document is about <em>wikid</em> (pronounce how you like), a really simple <a href="http://en.wikipedia.org/wiki/Wiki">wiki</a>. This wiki is so simple, in fact, that I hesitate even to call it a wiki. You see, it doesn't use a database, or have authorization or even users. There's no history, no email notifications, no media uploading, no discussions, no metadata and no UI for managing pages.</p>
+<p>So, you may ask, why the hell should anyone use it? That's a very good question that I will answer now. Even though <em>wikid</em> doesn't have any of those fine things listed in the last paragraph, there are some other tools that do and they work nicely with <em>wikid</em>. Those tools are a modern operating system, a text editor and a modern revision control system, like <a href="http://git-scm.com/">git</a>. A modern operating system provides loads of support for authoring different kinds of media files, a text editor let's you write <a href="http://daringfireball.net/projects/markdown/">Markdown</a>, the language of <em>wikid</em> and an rcs provides revision history and attribution of changes.</p>
 <p>Harumph--I imagine you saying--that's all well and good for you, but what about regular users that like to have GUIs and cloud storage and whatnot? Well--I imagine me saying back to you--there are a lot of software packages like that and you should go find one. <em>Wikid</em> is especially made for developers.</p>
-<h2 id="developer-documentation-is-ok-i-guess">Developer documentation is ok, I guess</h2>
-<p>Ok, actually the state of developer documentation is pretty awful. There are lots of tools for generating API documentation which is super helpful if you already have a grasp on how a system works. Some languages/tools let you write more informal docs in comments and compile them into something book-like but this is stretching commenting a little far beyond its purpose, especially when you are trying to communicate high level design that doesn't necessarily make sense to put in one particular source code file.</p>
-<p>And then there's the multimedia question. Where do we put our diagram, mp3 and DivX files? We can make a directory for it in the src tree but then we've got part of the documentation in comments in the code and they are linking to files in some other directory. This makes documentation harder to think about and therefore harder to maintain.</p>
+<h2 id="simpler-documentation">Simpler documentation</h2>
+<p>There are lots of tools for generating API documentation which is super helpful if you already have a grasp on how a system works. A lot of these tools also support building more guide-like docs. However, these systems tend to be pretty heavy and/or use are based directly on source code comments and there is often a need to start documenting ideas, todos, etc., well before code is written or an environment chosen.</p>
+<p>And then there's the multimedia question. Where do we put our diagrams, audio and video files? We can make a directory for it in the src tree but then we've got part of the documentation in comments in the code and they are linking to files in some other directory. This makes documentation harder to think about and therefore harder to maintain.</p>
 <p>Then there's the approach where we use some kind of project-specific Wiki or CMS solution. Waaaaay better authoring capabilities but again, the docs are somewhere far from the code. Far away and out of sight. Think back to all those times you created a wiki and said "This time, I'm really going to update the docs every time I refactor." Did it happen? Reeeeeeeeally? Wouldn't it be more likely to happen if the docs folder was staring you in the face every time you looked at the project's source tree?</p>
 <h2 id="plain-text-to-the-rescue">Plain-text to the rescue!</h2>
-<p>Many developers have been using plain-text formats to document projects for awhile now. The reason is because it is very nice. The reason it is very nice is that unstructured text documents have unparalleled expressive power (for more, see <a href="http:/en.wikipedia.org/wiki/Book">Books</a>). There is really no substitute for good old plain text. For that reason there are bunches of other documentation generators that work similarly, soooo...</p>
-<h2 id="another-one-really">Another one? Really?</h2>
-<p>Yeah. I don't have an excuse for writing this one except I felt like it. Also, <em>wikid</em> has search and I couldn't find one with search.</p>
+<p>Many developers have been using plain-text formats to document projects for awhile now. The reason is because it is very nice. The reason it is very nice is that unstructured text documents are super easy to create and share and plain text has unparalleled expressive power (for more, see <a href="http://en.wikipedia.org/wiki/Book">Books</a>). There is really no substitute for good old plain text. For that reason there are bunches of other documentation generators that work similarly, soooo...</p>
+<h2 id="why-another-one">Why another one?</h2>
+<p>Yeah. I don't have an excuse for writing this one except I felt like it. Also, <em>wikid</em> has a unique search function that I couldn't find anywhere else.</p>
 <h2 id="roadmap">Roadmap</h2>
 <p>I want to add or change some things:</p>
 <ul>
@@ -27,183 +38,12 @@
 <li>Smaller search index size</li>
 <li>Finish this documentation</li>
 </ul>
-<p>If you think of something that would make <em>wikid</em> work better for you <a href="https:/github.com/elishacook/wikid/issues">let me know</a>.</p>
-<h1 id="documentation">Documentation</h1>
-<p><em>Wikid</em> is simple but there are still some things you'll want to know so that you can use it. This section goes over those things and explains a little bit about how <em>wikid</em> works at the same time.</p>
-<h2 id="installation">Installation</h2>
-<p>This is pretty easy if you already have python installed.</p>
-<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="codehilite"><pre>pip install wikid
-</pre></div>
-</td></tr></table>
-
-<p>You can also install it from source.</p>
-<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3</pre></div></td><td class="code"><div class="codehilite"><pre>git clone git://github.com/elishacook/wikid.git
-<span class="nb">cd </span>wikid
-python setup.py install
-</pre></div>
-</td></tr></table>
-
-<p>Either way, you will get a script installed called <code>wikid</code>. Here's the help for it.</p>
-<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14</pre></div></td><td class="code"><div class="codehilite"><pre><span class="nv">$ </span>wikid -h
-usage: __init__.py <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>--path PATH<span class="o">]</span> <span class="o">[</span>--output OUT<span class="o">]</span> <span class="o">[</span>--port PORT<span class="o">]</span> <span class="o">[</span>--serve<span class="o">]</span>
-
-Run a wikid wiki.
-
-optional arguments:
-  -h, --help    show this <span class="nb">help </span>message and <span class="nb">exit</span>
-  --path PATH   The path where the wiki files can be found. The default value
-                is <span class="s1">&#39;./docs&#39;</span>.
-  --output OUT  The path where the html files will be written. The default
-                value is <span class="s1">&#39;./docs-html&#39;</span>.
-  --port PORT   The port on which to start the server. The default value is
-                3001.
-  --serve       Start a wiki server.
-</pre></div>
-</td></tr></table>
-
-<h2 id="built-in-web-server">Built-in web server</h2>
-<p><em>Wikid</em> can run a web server. The server reads your Markdown files on request so you can work on your docs and reload the page to see changes. This server is not high or even medium performance. It is a toy and it's only purpose is developing your wiki. To share the wiki files with a lot of people it is suggested that you send them the files directly, or use a medium-to-high performance web server and use it to medium-to-high-ly performance serve the statically generated HTML files you can learn about in the next section.</p>
-<p>Here's how you start a server that will server all the files in the directory <code>./my-wiki-directory</code> on port 8000:</p>
-<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="codehilite"><pre>wikid --serve --path<span class="o">=</span>./my-wiki-directory --port<span class="o">=</span>8000
-</pre></div>
-</td></tr></table>
-
-<h2 id="building-static-files">Building static files</h2>
-<p><em>Wikid</em> can generate HTML files from your wiki. It will create a new output directory, copy all of the non-Markdown files from the input directory and generate one HTML file per Markdown file. So if we have a directory structure like this:</p>
-<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11</pre></div></td><td class="code"><div class="codehilite"><pre><span class="n">my</span><span class="o">-</span><span class="n">project</span><span class="o">/</span>
-    <span class="n">docs</span><span class="o">/</span>
-        <span class="n">images</span><span class="o">/</span>
-            <span class="n">hairpiece</span><span class="o">-</span><span class="n">diagram</span><span class="p">.</span><span class="n">jpg</span>
-            <span class="n">unicorn</span><span class="o">-</span><span class="n">tank</span><span class="o">-</span><span class="n">action</span><span class="o">-</span><span class="n">shot</span><span class="p">.</span><span class="n">jpg</span>
-        <span class="n">index</span><span class="p">.</span><span class="n">md</span>
-        <span class="n">how</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">dance</span><span class="p">.</span><span class="n">md</span>
-        <span class="n">how</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">dance</span><span class="o">-</span><span class="n">crappy</span><span class="p">.</span><span class="n">md</span>
-    <span class="n">src</span><span class="o">/</span>
-    <span class="n">README</span>
-    <span class="n">LICENSE</span>
-</pre></div>
-</td></tr></table>
-
-<p>and we run this command from the <code>my-project</code> directory:</p>
-<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="codehilite"><pre>wikid --path<span class="o">=</span>./docs --output<span class="o">=</span>./docs-dist
-</pre></div>
-</td></tr></table>
-
-<p>we will end up with this:</p>
-<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24</pre></div></td><td class="code"><div class="codehilite"><pre><span class="n">my</span><span class="o">-</span><span class="n">project</span><span class="o">/</span>
-    <span class="n">docs</span><span class="o">/</span>
-        <span class="n">images</span><span class="o">/</span>
-            <span class="n">hairpiece</span><span class="o">-</span><span class="n">diagram</span><span class="p">.</span><span class="n">jpg</span>
-            <span class="n">unicorn</span><span class="o">-</span><span class="n">tank</span><span class="o">-</span><span class="n">action</span><span class="o">-</span><span class="n">shot</span><span class="p">.</span><span class="n">jpg</span>
-        <span class="n">index</span><span class="p">.</span><span class="n">md</span>
-        <span class="n">how</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">dance</span><span class="p">.</span><span class="n">md</span>
-        <span class="n">how</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">dance</span><span class="o">-</span><span class="n">crappy</span><span class="p">.</span><span class="n">md</span>
-    <span class="n">docs</span><span class="o">-</span><span class="n">dist</span><span class="o">/</span>
-        <span class="n">css</span><span class="o">/</span>
-            <span class="n">styles</span><span class="p">.</span><span class="n">css</span>
-        <span class="n">images</span><span class="o">/</span>
-            <span class="n">hairpiece</span><span class="o">-</span><span class="n">diagram</span><span class="p">.</span><span class="n">jpg</span>
-            <span class="n">unicorn</span><span class="o">-</span><span class="n">tank</span><span class="o">-</span><span class="n">action</span><span class="o">-</span><span class="n">shot</span><span class="p">.</span><span class="n">jpg</span>
-        <span class="n">js</span><span class="o">/</span>
-            <span class="n">jquery</span><span class="p">.</span><span class="n">js</span>
-            <span class="n">search</span><span class="o">-</span><span class="n">index</span><span class="p">.</span><span class="n">js</span>
-            <span class="n">search</span><span class="p">.</span><span class="n">js</span>
-        <span class="n">index</span><span class="p">.</span><span class="n">html</span>
-        <span class="n">how</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">dance</span><span class="p">.</span><span class="n">html</span>
-        <span class="n">how</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">dance</span><span class="o">-</span><span class="n">crappy</span><span class="p">.</span><span class="n">html</span>
-    <span class="n">src</span><span class="o">/</span>
-    <span class="n">README</span>
-    <span class="n">LICENSE</span>
-</pre></div>
-</td></tr></table>
-
-<p>That's what I said it would do plus there are some more files. The <code>js</code> and <code>css</code> directories are copied from the <code>wikid</code> source folder and <code>search-index.js</code> is the search index for your whole wiki. You can add your own styles and scripts too. That's covered in the section on <a href="#customize">customization</a>.</p>
-<p><em>wikid</em> is smart about paths inside links and <code>img</code> tags and stuff so you don't have to worry about it. If you have a link that works when you use the web server it will work in the static files too.</p>
-<h2 id="markdown-flavor">Markdown flavor</h2>
-<p><em>Wikid</em> uses <a href="http:/packages.python.org/Markdown">this Markdown package</a>. I'll just quote that page:</p>
-<blockquote>
-<p>This is a Python implementation of John Gruber's <a href="http:/daringfireball.net/projects/markdown">Markdown</a>. It is almost completely compliant 
-with the reference implementation, though there are a few very minor <a href="http:/packages.python.org/Markdown/index.html#differences">differences</a>. See John's 
-<a href="http:/daringfireball.net/projects/markdown/syntax">Syntax Documentation</a> for the syntax rules.</p>
-</blockquote>
-<p>In addition, several <a href="http:/packages.python.org/Markdown/extensions">extensions</a> are enabled. These are extra, codehilite, headerid, toc and wikilinks.</p>
-<h2 id="customize">Customize</h2>
-<h2 id="search">Search</h2>
-<div class="toc"><span class="toctitle">Table of Contents</span><ul>
-<li><a href="#wikid-the-stupid-simple-wiki">Wikid: The stupid-simple wiki</a><ul>
-<li><a href="#developer-documentation-is-ok-i-guess">Developer documentation is ok, I guess</a></li>
-<li><a href="#plain-text-to-the-rescue">Plain-text to the rescue!</a></li>
-<li><a href="#another-one-really">Another one? Really?</a></li>
-<li><a href="#roadmap">Roadmap</a></li>
-</ul>
-</li>
-<li><a href="#documentation">Documentation</a><ul>
-<li><a href="#installation">Installation</a></li>
-<li><a href="#built-in-web-server">Built-in web server</a></li>
-<li><a href="#building-static-files">Building static files</a></li>
-<li><a href="#markdown-flavor">Markdown flavor</a></li>
-<li><a href="#customize">Customize</a></li>
-<li><a href="#search">Search</a></li>
-</ul>
-</li>
-</ul>
-</div>
+<p>If you think of something that would make <em>wikid</em> work better for you <a href="https://github.com/elishacook/wikid/issues">let me know</a>.</p>
+            </div>
         </div>
-        <div id="wikid-search">
-            <input type="text" placeholder="Search...">
-            <div class="results"></div>
-            <a href="#" class="cancel">X</a>
-        </div>
-        <script src="js/jquery.js"></script>
-        <script src="js/search-index.js"></script>
-        <script src="js/search.js"></script>
+        <script src="./js/jquery.js"></script>
+        <script src="./js/search-index.js"></script>
+        <script src="./js/toc.js"></script>
+        <script src="./js/main.js"></script>
     </body>
 </html>

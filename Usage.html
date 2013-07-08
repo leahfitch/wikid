@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Usage</title>
+        <link rel="stylesheet" type="text/css" href="./css/styles.css">
+    </head>
+    <body>
+        <div id="wikid-content">
+            <aside id="wikid-sidebar">
+                <div id="wikid-toc"></div>
+                <div id="wikid-search">
+                    <input type="text" placeholder="Search...">
+                    <div class="results"></div>
+                    <a href="#" class="cancel">X</a>
+                </div>
+            </aside>
+            <div id="wikid-body">
+            <h1 id="usage">Usage</h1>
+<p><em>Wikid</em> is simple but there are still some things you'll want to know so that you can use it. This section goes over those things and explains a little bit about how <em>wikid</em> works at the same time.</p>
+<h2 id="installation">Installation</h2>
+<p>This is pretty easy if you already have python installed.</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="codehilite"><pre>pip install wikid
+</pre></div>
+</td></tr></table>
+
+<p>You can also install it from source.</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="codehilite"><pre>git clone git://github.com/elishacook/wikid.git
+<span class="nb">cd </span>wikid
+python setup.py install
+</pre></div>
+</td></tr></table>
+
+<p>Either way, you will get a script installed called <code>wikid</code>. Here's the help for it.</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14</pre></div></td><td class="code"><div class="codehilite"><pre><span class="nv">$ </span>wikid -h
+usage: __init__.py <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>--path PATH<span class="o">]</span> <span class="o">[</span>--output OUT<span class="o">]</span> <span class="o">[</span>--port PORT<span class="o">]</span> <span class="o">[</span>--serve<span class="o">]</span>
+
+Run a wikid wiki.
+
+optional arguments:
+  -h, --help    show this <span class="nb">help </span>message and <span class="nb">exit</span>
+  --path PATH   The path where the wiki files can be found. The default value
+                is <span class="s1">&#39;./docs&#39;</span>.
+  --output OUT  The path where the html files will be written. The default
+                value is <span class="s1">&#39;./docs-html&#39;</span>.
+  --port PORT   The port on which to start the server. The default value is
+                3001.
+  --serve       Start a wiki server.
+</pre></div>
+</td></tr></table>
+
+<h2 id="built-in-web-server">Built-in web server</h2>
+<p><em>Wikid</em> can run a web server. The server reads your Markdown files on request so you can work on your docs and reload the page to see changes. This server is not high or even medium performance. It is a toy and it's only purpose is developing your wiki. To share the wiki files with a lot of people it is suggested that you send them the files directly, or use a medium-to-high performance web server and use it to medium-to-high-ly performance serve the statically generated HTML files you can learn about in the next section.</p>
+<p>Here's how you start a server that will server all the files in the directory <code>./my-wiki-directory</code> on port 8000:</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="codehilite"><pre>wikid --serve --path<span class="o">=</span>./my-wiki-directory --port<span class="o">=</span>8000
+</pre></div>
+</td></tr></table>
+
+<h2 id="building-static-files">Building static files</h2>
+<p><em>Wikid</em> can generate HTML files from your wiki. It will create a new output directory, copy all of the non-Markdown files from the input directory and generate one HTML file per Markdown file. So if we have a directory structure like this:</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11</pre></div></td><td class="code"><div class="codehilite"><pre><span class="n">my</span><span class="o">-</span><span class="n">project</span><span class="o">/</span>
+    <span class="n">docs</span><span class="o">/</span>
+        <span class="n">images</span><span class="o">/</span>
+            <span class="n">hairpiece</span><span class="o">-</span><span class="n">diagram</span><span class="p">.</span><span class="n">jpg</span>
+            <span class="n">unicorn</span><span class="o">-</span><span class="n">tank</span><span class="o">-</span><span class="n">action</span><span class="o">-</span><span class="n">shot</span><span class="p">.</span><span class="n">jpg</span>
+        <span class="n">index</span><span class="p">.</span><span class="n">md</span>
+        <span class="n">how</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">dance</span><span class="p">.</span><span class="n">md</span>
+        <span class="n">how</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">dance</span><span class="o">-</span><span class="n">crappy</span><span class="p">.</span><span class="n">md</span>
+    <span class="n">src</span><span class="o">/</span>
+    <span class="n">README</span>
+    <span class="n">LICENSE</span>
+</pre></div>
+</td></tr></table>
+
+<p>and we run this command from the <code>my-project</code> directory:</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="codehilite"><pre>wikid --path<span class="o">=</span>./docs --output<span class="o">=</span>./docs-dist
+</pre></div>
+</td></tr></table>
+
+<p>we will end up with this:</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24</pre></div></td><td class="code"><div class="codehilite"><pre><span class="n">my</span><span class="o">-</span><span class="n">project</span><span class="o">/</span>
+    <span class="n">docs</span><span class="o">/</span>
+        <span class="n">images</span><span class="o">/</span>
+            <span class="n">hairpiece</span><span class="o">-</span><span class="n">diagram</span><span class="p">.</span><span class="n">jpg</span>
+            <span class="n">unicorn</span><span class="o">-</span><span class="n">tank</span><span class="o">-</span><span class="n">action</span><span class="o">-</span><span class="n">shot</span><span class="p">.</span><span class="n">jpg</span>
+        <span class="n">index</span><span class="p">.</span><span class="n">md</span>
+        <span class="n">how</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">dance</span><span class="p">.</span><span class="n">md</span>
+        <span class="n">how</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">dance</span><span class="o">-</span><span class="n">crappy</span><span class="p">.</span><span class="n">md</span>
+    <span class="n">docs</span><span class="o">-</span><span class="n">dist</span><span class="o">/</span>
+        <span class="n">css</span><span class="o">/</span>
+            <span class="n">styles</span><span class="p">.</span><span class="n">css</span>
+        <span class="n">images</span><span class="o">/</span>
+            <span class="n">hairpiece</span><span class="o">-</span><span class="n">diagram</span><span class="p">.</span><span class="n">jpg</span>
+            <span class="n">unicorn</span><span class="o">-</span><span class="n">tank</span><span class="o">-</span><span class="n">action</span><span class="o">-</span><span class="n">shot</span><span class="p">.</span><span class="n">jpg</span>
+        <span class="n">js</span><span class="o">/</span>
+            <span class="n">jquery</span><span class="p">.</span><span class="n">js</span>
+            <span class="n">search</span><span class="o">-</span><span class="n">index</span><span class="p">.</span><span class="n">js</span>
+            <span class="n">search</span><span class="p">.</span><span class="n">js</span>
+        <span class="n">index</span><span class="p">.</span><span class="n">html</span>
+        <span class="n">how</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">dance</span><span class="p">.</span><span class="n">html</span>
+        <span class="n">how</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">dance</span><span class="o">-</span><span class="n">crappy</span><span class="p">.</span><span class="n">html</span>
+    <span class="n">src</span><span class="o">/</span>
+    <span class="n">README</span>
+    <span class="n">LICENSE</span>
+</pre></div>
+</td></tr></table>
+
+<p>That's what I said it would do plus there are some more files. The <code>js</code> and <code>css</code> directories are copied from the <code>wikid</code> source folder and <code>search-index.js</code> is the search index for your whole wiki. You can add your own styles and scripts too.</p>
+<p><em>wikid</em> is smart about paths inside links and <code>img</code> tags and stuff so you don't have to worry about it. If you have a link that works when you use the web server it will work in the static files too.</p>
+<h2 id="markdown-flavor">Markdown flavor</h2>
+<p><em>Wikid</em> uses <a href="http://packages.python.org/Markdown/">this Markdown package</a>. I'll just quote that page:</p>
+<blockquote>
+<p>This is a Python implementation of John Gruber's <a href="http://daringfireball.net/projects/markdown/">Markdown</a>. It is almost completely compliant 
+with the reference implementation, though there are a few very minor <a href="http://packages.python.org/Markdown/index.html#differences">differences</a>. See John's 
+<a href="http://daringfireball.net/projects/markdown/syntax">Syntax Documentation</a> for the syntax rules.</p>
+</blockquote>
+<p>In addition, several <a href="http://packages.python.org/Markdown/extensions/">extensions</a> are enabled. These are extra, codehilite, headerid, toc and wikilinks.</p>
+            </div>
+        </div>
+        <script src="./js/jquery.js"></script>
+        <script src="./js/search-index.js"></script>
+        <script src="./js/toc.js"></script>
+        <script src="./js/main.js"></script>
+    </body>
+</html>
