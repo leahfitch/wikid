@@ -82,8 +82,9 @@ we will end up with this:
                 unicorn-tank-action-shot.jpg
             js/
                 jquery.js
+                main.js
                 search-index.js
-                search.js
+                toc.js
             index.html
             how-to-dance.html
             how-to-dance-crappy.html
@@ -91,9 +92,9 @@ we will end up with this:
         README
         LICENSE
 
-That's what I said it would do plus there are some more files. The `js` and `css` directories are copied from the `wikid` source folder and `search-index.js` is the search index for your whole wiki. You can add your own styles and scripts too.
+That's what I said it would do plus there are some more files. The `js` and `css` directories are copied from the `wikid` source folder, `search-index.js` is the search index for your whole wiki and `toc.js` is a compact representation of the table of contents for the whole iwki.
 
-*wikid* is smart about paths inside links and `img` tags and stuff so you don't have to worry about it. If you have a link that works when you use the web server it will work in the static files too.
+*wikid* is smart about paths inside links and `img` tags and stuff so you don't have to worry about it too much. All paths that reference files int he wiki folders should be relative to the root wiki folder. If you have a link that works when you use the web server it will work in the static files too.
 
 ## Markdown flavor
 
