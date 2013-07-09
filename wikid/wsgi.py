@@ -62,10 +62,15 @@ class WikidApp(object):
                 else:
                     raise WikidNotFoundError()
         
-        if os.path.splitext(full_path)[1] == '.md':
+        name,ext = os.path.splitext(os.path.basename(full_path))
+        if ext == '.md':
+            if name == 'index':
+                base_url = ''
+            else:
+                base_url = os.path.relpath(self.path, start=full_path) + '/'
             result = convert(full_path, 
                             extension_configs={'wikilinks':[
-                                ('base_url', 'http://localhost:%d/' % self.port)
+                                ('base_url', base_url)
                             ]})
             content_type = 'text/html; charset=utf-8'
         else:
@@ -99,15 +104,14 @@ class WikidApp(object):
         print "Updating index ...",
         
         def link_gen(base, name, id=None):
-            if base.startswith('./'):
-                base = base[2:]
-            elif base == '.':
+            if name == 'index':
+                name = ''
+            if base == '.':
                 base = ''
-            path = '/'
-            if name != 'index':
-                path += os.path.join(base, name)
+            path = os.path.join(base, name)
             if id:
-                path += '#'+id
+                path += '/#'+id
+            print path
             return path
                 
         

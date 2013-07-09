@@ -7,7 +7,7 @@ html_template = u"""<!DOCTYPE html>
 <html>
     <head>
         <title>%(title)s</title>
-        <link rel="stylesheet" type="text/css" href="%(base_url)scss/styles.css">
+        <link rel="stylesheet" type="text/css" href="css/styles.css">
     </head>
     <body>
         <div id="wikid-content">
@@ -23,14 +23,15 @@ html_template = u"""<!DOCTYPE html>
             %(body)s
             </div>
         </div>
-        <script src="%(base_url)sjs/jquery.js"></script>
-        <script src="%(base_url)sjs/search-index.js"></script>
-        <script src="%(base_url)sjs/toc.js"></script>
-        <script src="%(base_url)sjs/main.js"></script>
+        <script src="js/jquery.js"></script>
+        <script src="js/search-index.js"></script>
+        <script src="js/toc.js"></script>
+        <script src="js/main.js"></script>
     </body>
 </html>"""
 
 title_re = re.compile('<h1[^>]+>([^<]+)</h1>')
+src_re = re.compile('(href|src)="([^#^"]+)')
 
 def convert(path, extensions=None, extension_configs=None):
     """Get the html from a markdown file as a string. 
@@ -63,8 +64,17 @@ def convert(path, extensions=None, extension_configs=None):
         title = match.group(1)
     else:
         title = os.path.splitext(os.path.split(path)[-1])[0]
-        
-    return (html_template % { 
+    
+    html = (html_template % { 
         'title': title, 
         'body': html,
         'base_url': base_url }).encode('utf-8')
+    
+    for attr, path in src_re.findall(html):
+        if path.startswith('http://') or path.startswith(base_url):
+            continue
+        full_path = base_url + path
+        html = html.replace('%s="%s"' % (attr, path),
+                            '%s="%s"' % (attr, full_path))
+    
+    return html

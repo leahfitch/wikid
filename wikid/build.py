@@ -9,7 +9,6 @@ from wikid.index import TextCollectingExtension, make_index
 
 link_re = re.compile('(href|src)="([^#^"][^"]*)"')
     
-    
 def walk_wiki_files(path,
     dir_visitor=None,
     non_wiki_visitor=None,
@@ -53,10 +52,10 @@ def walk_wiki_files(path,
                     os.path.relpath(os.path.join(base, d), start=path)
                 )
         for f in files:
+            relbase = os.path.relpath(base, start=path)
             name, ext = os.path.splitext(f)
             if ext == '.md':
                 md_text_ext = TextCollectingExtension()
-                relbase = os.path.relpath(base, start=path)
                 if link_gen:
                     base_url = link_gen(relbase, '', None)
                 else:

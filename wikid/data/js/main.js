@@ -26,7 +26,14 @@
 				}
 			})
 			
-			return path_parts.join('/') + '/'
+			var path = path_parts.join('/')
+			
+			if (path[path.length - 1] != '/')
+			{
+				path += '/'
+			}
+			
+			return path
 		})()
 	
 	;(function ()
@@ -331,6 +338,18 @@
 		return clean_path(parts[0]) == clean_path(window.location.pathname)
 	}
 	
+	var complete_path = function (path)
+	{
+		if (path[0] == '/')
+		{
+			return base_path + path.substr(1)
+		}
+		else
+		{
+			return base_path + path
+		}
+	}
+	
 	;(function ()
 	{
 		var $toc = $('#wikid-toc')
@@ -358,7 +377,7 @@
 				}
 			}
 			
-			var path = base_path + this.path
+			var path = complete_path(this.path)
 			$curitem = $('<li></li>')
 			$curitem.append(
 				$('<a>'+this.text+'</a>').attr('href', path)
