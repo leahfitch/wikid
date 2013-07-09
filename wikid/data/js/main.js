@@ -165,14 +165,6 @@
 			}
 		}
 
-		var adjust_paths = function (matches)
-		{
-			for (var i=0; i<matches.length; i++)
-			{
-				matches[i].path = base_path + matches[i].path
-			}
-		}
-
 		var find = function (text)
 		{
 			var text = text.replace(/\s+\:\;\(\)\{\}\[\]\,\?\!\./gi, '').toLowerCase(),
@@ -182,7 +174,6 @@
 			sort_matches(matches)
 			matches = get_filtered_matches(matches)
 			hilite_context(text, matches)
-			adjust_paths(matches)
 
 			return matches
 		}
@@ -226,6 +217,16 @@
 			$(document).unbind('click', hide_search_results)
 			$cancel.hide()
 		}
+		
+		var get_full_path = function (path)
+		{
+			if (path[0] == '/')
+			{
+				path = path.substr(1)
+			}
+			
+			return base_path + path
+		}
 
 		var update_search_results = function ()
 		{
@@ -247,7 +248,7 @@
 				$.each(matches, function (i, match)
 				{
 					var $li = $('<li></li>'),
-						$a = $('<a href="'+match.path+'"></a>')
+						$a = $('<a href="'+get_full_path(match.path)+'"></a>')
 
 					if (match.title)
 					{
