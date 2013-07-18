@@ -203,13 +203,12 @@ table tbody tr:nth-child(even)
 #wikid-search .cancel
 {
     display: none;
-    position: absolute;
-    font-size: 0.75em;
-    font-weight: bold;
-    top: .25em;
-    right: .5em;
     color: darkgray;
-
+    position: absolute;
+    top: 0.1rem;
+    right: 1rem;
+    font-weight: bold;
+    font-size: 0.75rem;
 }
 
 #wikid-search .results
