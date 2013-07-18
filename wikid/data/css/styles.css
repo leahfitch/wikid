@@ -42,6 +42,33 @@ blockquote
     font-style: italic;
 }
 
+table
+{
+    border-collapse: collapse;
+}
+
+table th
+{
+    font-weight: bold;
+}
+
+table th,
+table td
+{
+    padding: 0.25em 0.5em;
+}
+
+table thead
+{
+    background-color: #efefef;
+    border: 1px solid #ddd;
+}
+
+table tbody tr:nth-child(even)
+{
+    background-color: #efefef;
+}
+
 /* Main layout */
 
 #wikid-content
