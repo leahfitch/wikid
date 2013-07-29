@@ -10,8 +10,7 @@ setup(
     description = 'A stupid-simple, file-based wiki.',
     author = 'Elisha Cook',
     author_email = 'elisha@elishacook.com',
-    url = 'https://github.com/elishacook/wikid',
-    download_url = 'https://github.com/elishacook/wikid',
+    url = 'http://github.com/elishacook/wikid/',
     license = 'MIT',
     classifiers = [
     	'Development Status :: 4 - Beta',
