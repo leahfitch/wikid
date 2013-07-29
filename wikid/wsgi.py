@@ -57,6 +57,8 @@ class WikidApp(object):
             full_path = None
         elif ext == '.html':
             full_path = self.find_matching_path(name + '.md')
+        elif name == 'index':
+            full_path = self.find_matching_path('index.md')
         else:
             full_path = self.find_matching_path(path)
         
@@ -113,9 +115,9 @@ class WikidApp(object):
                 name = ''
             if base == '.':
                 base = ''
-            path = os.path.join(base, name)
+            path = os.path.join(base, name + '.html')
             if id:
-                path += '/#'+id
+                path += '#'+id
             return path
                 
         

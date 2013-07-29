@@ -2,7 +2,6 @@ import os
 import os.path
 import shutil
 import re
-import codecs
 import json
 from wikid.convert import convert
 from wikid.index import TextCollectingExtension, make_index
