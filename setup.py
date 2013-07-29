@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name = 'wikid',
-    version = '0.0.9',
+    version = '0.0.10',
     packages = ['wikid'],
     package_data = { 'wikid': ['data/js/*', 'data/css/*'] },
     scripts = ['scripts/wikid'],
@@ -11,7 +11,7 @@ setup(
     author = 'Elisha Cook',
     author_email = 'elisha@elishacook.com',
     url = 'https://github.com/elishacook/wikid',
-    download_url = 'https://github.com/elishacook/wikid/tarball/master',
+    download_url = 'https://github.com/elishacook/wikid',
     license = 'MIT',
     classifiers = [
     	'Development Status :: 4 - Beta',
