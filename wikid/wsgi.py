@@ -39,7 +39,7 @@ class WikidApp(object):
         
         try:
             result, content_type = self.handle(path)
-        except WikidNotFoundError, e:
+        except WikidNotFoundError:
             start_response('404 Not Found', [('Content-Type', 'text/plain')])
             return ["I couldn't find anything at this location."]
 
@@ -50,17 +50,22 @@ class WikidApp(object):
     def handle(self, path):
         if path[-1] == '/':
             path = path[:-1]
-            
-        full_path = self.find_matching_path(path)
+        
+        name,ext = os.path.splitext(os.path.basename(path))
+        
+        if ext == '.md':
+            full_path = None
+        elif ext == '.html':
+            full_path = self.find_matching_path(name + '.md')
+        else:
+            full_path = self.find_matching_path(path)
         
         if not full_path:
-            full_path = self.find_matching_path(path + '.md')
-            if not full_path:
-                handler = self.handlers.get(path)
-                if handler:
-                    return handler()
-                else:
-                    raise WikidNotFoundError()
+            handler = self.handlers.get(path)
+            if handler:
+                return handler()
+            else:
+                raise WikidNotFoundError()
         
         name,ext = os.path.splitext(os.path.basename(full_path))
         if ext == '.md':
@@ -111,7 +116,6 @@ class WikidApp(object):
             path = os.path.join(base, name)
             if id:
                 path += '/#'+id
-            print path
             return path
                 
         
