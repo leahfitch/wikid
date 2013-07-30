@@ -1,40 +1,8 @@
-from markdown.treeprocessors import Treeprocessor
-from markdown.extensions import Extension
-import math
 import json
+import math
 
-STX = u'\u0002'
 STOP_WORDS = set("a,able,about,above,abst,accordance,according,accordingly,across,act,actually,added,adj,affected,affecting,affects,after,afterwards,again,against,ah,all,almost,alone,along,already,also,although,always,am,among,amongst,an,and,announce,another,any,anybody,anyhow,anymore,anyone,anything,anyway,anyways,anywhere,apparently,approximately,are,aren,arent,arise,around,as,aside,ask,asking,at,auth,available,away,awfully,b,back,be,became,because,become,becomes,becoming,been,before,beforehand,begin,beginning,beginnings,begins,behind,being,believe,below,beside,besides,between,beyond,biol,both,brief,briefly,but,by,c,ca,came,can,cannot,can't,cause,causes,certain,certainly,co,com,come,comes,contain,containing,contains,could,couldnt,d,date,did,didn't,different,do,does,doesn't,doing,done,don't,down,downwards,due,during,e,each,ed,edu,effect,eg,eight,eighty,either,else,elsewhere,end,ending,enough,especially,et,et-al,etc,even,ever,every,everybody,everyone,everything,everywhere,ex,except,f,far,few,ff,fifth,first,five,fix,followed,following,follows,for,former,formerly,forth,found,four,from,further,furthermore,g,gave,get,gets,getting,give,given,gives,giving,go,goes,gone,got,gotten,h,had,happens,hardly,has,hasn't,have,haven't,having,he,hed,hence,her,here,hereafter,hereby,herein,heres,hereupon,hers,herself,hes,hi,hid,him,himself,his,hither,home,how,howbeit,however,hundred,i,id,ie,if,i'll,im,immediate,immediately,importance,important,in,inc,indeed,index,information,instead,into,invention,inward,is,isn't,it,itd,it'll,its,itself,i've,j,just,k,keep,keeps,kept,kg,km,know,known,knows,l,largely,last,lately,later,latter,latterly,least,less,lest,let,lets,like,liked,likely,line,little,'ll,look,looking,looks,ltd,m,made,mainly,make,makes,many,may,maybe,me,mean,means,meantime,meanwhile,merely,mg,might,million,miss,ml,more,moreover,most,mostly,mr,mrs,much,mug,must,my,myself,n,na,name,namely,nay,nd,near,nearly,necessarily,necessary,need,needs,neither,never,nevertheless,new,next,nine,ninety,no,nobody,non,none,nonetheless,noone,nor,normally,nos,not,noted,nothing,now,nowhere,o,obtain,obtained,obviously,of,off,often,oh,ok,okay,old,omitted,on,once,one,ones,only,onto,or,ord,other,others,otherwise,ought,our,ours,ourselves,out,outside,over,overall,owing,own,p,page,pages,part,particular,particularly,past,per,perhaps,placed,please,plus,poorly,possible,possibly,potentially,pp,predominantly,present,previously,primarily,probably,promptly,proud,provides,put,q,que,quickly,quite,qv,r,ran,rather,rd,re,readily,really,recent,recently,ref,refs,regarding,regardless,regards,related,relatively,research,respectively,resulted,resulting,results,right,run,s,said,same,saw,say,saying,says,sec,section,see,seeing,seem,seemed,seeming,seems,seen,self,selves,sent,seven,several,shall,she,shed,she'll,shes,should,shouldn't,show,showed,shown,showns,shows,significant,significantly,similar,similarly,since,six,slightly,so,some,somebody,somehow,someone,somethan,something,sometime,sometimes,somewhat,somewhere,soon,sorry,specifically,specified,specify,specifying,still,stop,strongly,sub,substantially,successfully,such,sufficiently,suggest,sup,sure,t,take,taken,taking,tell,tends,th,than,thank,thanks,thanx,that,that'll,thats,that've,the,their,theirs,them,themselves,then,thence,there,thereafter,thereby,thered,therefore,therein,there'll,thereof,therere,theres,thereto,thereupon,there've,these,they,theyd,they'll,theyre,they've,think,this,those,thou,though,thoughh,thousand,throug,through,throughout,thru,thus,til,tip,to,together,too,took,toward,towards,tried,tries,truly,try,trying,ts,twice,two,u,un,under,unfortunately,unless,unlike,unlikely,until,unto,up,upon,ups,us,use,used,useful,usefully,usefulness,uses,using,usually,v,value,various,'ve,very,via,viz,vol,vols,vs,w,want,wants,was,wasn't,way,we,wed,welcome,we'll,went,were,weren't,we've,what,whatever,what'll,whats,when,whence,whenever,where,whereafter,whereas,whereby,wherein,wheres,whereupon,wherever,whether,which,while,whim,whither,who,whod,whoever,whole,who'll,whom,whomever,whos,whose,why,widely,willing,wish,with,within,without,won't,words,world,would,wouldn't,www,x,y,yes,yet,you,youd,you'll,your,youre,yours,yourself,yourselves,you've,z,zero".split(','))
 
-class TextCollectingTreeprocessor(Treeprocessor):
-    
-    def __init__(self, *args, **kwargs):
-        Treeprocessor.__init__(self, *args, **kwargs)
-        self.last_item = None
-        self.items = []
-    
-    def run(self, root):
-        for elm in root.iter():
-            if elm.tag in ['h1','h2','h3','h4','h5','h6']:
-                self.last_item = {
-                    'id': elm.attrib['id'],
-                    'title': elm.text,
-                    'text': [],
-                    'depth': int(elm.tag[1])
-                }
-                self.items.append(self.last_item)
-            elif self.last_item and elm.text and not elm.text[0] == STX:
-                self.last_item['text'].append(elm.text)
-
-
-class TextCollectingExtension(Extension):
-
-    def __init__(self, *args, **kwargs):
-        Extension.__init__(self, *args, **kwargs)
-
-    def extendMarkdown(self, md, md_globals):
-        self.treeprocessor = TextCollectingTreeprocessor(md)
-        md.treeprocessors.add('textcollector', self.treeprocessor, '<attr_list')
 
 illegal_start_chars = '\'"({['
 illegal_end_chars = '.?!,:;\'")}]'
@@ -213,5 +181,39 @@ def make_index(raw_docs):
 
     paths = reverse_and_sort(paths.items())
     titles = reverse_and_sort(titles.items())
-    encode = lambda x: json.dumps(x, separators=(',',':')).encode('utf-8')
-    return 'var wikid_search_index={titles:' + encode(titles) + ',paths:' + encode(paths) + ',trie:' + encode(trie) + '};'
+    return {
+        'titles': titles,
+        'paths': paths,
+        'trie': trie
+    }
+
+
+class SearchIndexer(object):
+    
+    def __init__(self, documents):
+        self.documents = documents
+        self.index = {}
+        self.build()
+        
+    def build(self):
+        items = []
+        last_item = None
+        for doc in self.documents:
+            if not doc['root']:
+                continue
+            for elm in doc['root'].iter():
+                if elm.tag in ['h1','h2','h3','h4','h5','h6']:
+                    last_item = {
+                        'id': elm.attrib['id'],
+                        'title': elm.text,
+                        'text': [],
+                        'path': doc['path']
+                    }
+                    items.append(last_item)
+                elif last_item and elm.text and not elm.text[0] == u'\u0002':
+                    last_item['text'].append(elm.text)
+        self.index = make_index(items)
+        
+    def to_js(self):
+        return u'var wikid_search_index = ' + json.dumps(self.index, separators=(u',', u':'))
+        
